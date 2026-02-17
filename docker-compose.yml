@@ -1,0 +1,26 @@
+services:
+  # O Banco de Dados Principal
+  db:
+    image: postgres:15-alpine
+    container_name: sst_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: sst_user
+      POSTGRES_PASSWORD: sst_password_secure
+      POSTGRES_DB: sst_fasttrack_db
+    ports:
+      - "5433:5432"
+    volumes:
+      # Persistência: Os dados ficam na pasta .docker/data do seu PC
+      - ./.docker/data:/var/lib/postgresql/data
+      # Inicialização: Roda o script SQL na primeira vez que subir
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # Interface Visual Web para ver o Banco (tipo um PhpMyAdmin para Postgres)
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db

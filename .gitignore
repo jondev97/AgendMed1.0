@@ -1,0 +1,17 @@
+# Ignorar Node (Frontend)
+node_modules/
+dist/
+npm-debug.log
+
+# Ignorar Python (Backend)
+__pycache__/
+*.py[cod]
+venv/
+.env
+backend/asos_gerados/
+
+# Ignorar Sistema/Docker
+.DS_Store
+.docker/
+postgres-data/
+.vscode/
