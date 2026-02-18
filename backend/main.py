@@ -20,26 +20,31 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 models.Base.metadata.create_all(bind=engine)
 
 
-# --- INÍCIO DA CRIAÇÃO DO ADMIN ---
 def criar_admin_padrao():
     db = SessionLocal()
-    # Verifica se já existe algum usuário
     usuario = db.query(models.Usuario).filter(models.Usuario.email == "admin@sst.com").first()
+    
     if not usuario:
         print("👤 Criando usuário ADMIN padrão...")
         novo_admin = models.Usuario(
             nome="Administrador",
             email="admin@sst.com",
-            senha_hash=gerar_hash_senha("admin123"), # Senha padrão
+            senha_hash=gerar_hash_senha("admin123"),
             cargo="admin"
         )
         db.add(novo_admin)
-        db.commit()
-        print("✅ Usuário 'admin@sst.com' criado com senha 'admin123'")
+        print("✅ Usuário Admin CRIADO.")
+    else:
+        # SE JÁ EXISTE, ATUALIZA A SENHA PARA GARANTIR
+        print("🔄 Usuário Admin encontrado. Atualizando senha...")
+        usuario.senha_hash = gerar_hash_senha("admin123")
+        print("✅ Senha do Admin ATUALIZADA.")
+    
+    db.commit()
     db.close()
 
+# Não esqueça de manter a chamada da função logo abaixo!
 criar_admin_padrao()
-# --- FIM DA CRIAÇÃO DO ADMIN ---
 
 
 
