@@ -24,8 +24,8 @@ export function CheckIn() {
     const carregarDados = async () => {
       try {
         const [resEmp, resKit] = await Promise.all([
-          axios.get('https://sst-backend-xyz.onrender.com/empresas/'),
-          axios.get('https://sst-backend-xyz.onrender.com/kits/')
+          axios.get('https://sst-backend-rij2.onrender.com/empresas/'),
+          axios.get('https://sst-backend-rij2.onrender.com/kits/')
         ]);
         setEmpresas(resEmp.data);
         setKits(resKit.data);
@@ -39,7 +39,7 @@ export function CheckIn() {
   // Busca paciente por CPF no banco (Simulação de busca rápida)
   const buscarPaciente = async () => {
     try {
-      const res = await axios.get('https://sst-backend-xyz.onrender.com/pacientes/');
+      const res = await axios.get('https://sst-backend-rij2.onrender.com/pacientes/');
       const encontrado = res.data.find((p: Paciente) => p.cpf === cpfBusca);
       if (encontrado) {
         setPacienteSelecionado(encontrado);
@@ -58,7 +58,7 @@ export function CheckIn() {
     if (!pacienteSelecionado) return;
 
     try {
-      await axios.post('https://sst-backend-xyz.onrender.com/atendimentos/', {
+      await axios.post('https://sst-backend-rij2.onrender.com/atendimentos/', {
         paciente_id: pacienteSelecionado.id,
         empresa_id: empresaId,
         kit_id: kitId,

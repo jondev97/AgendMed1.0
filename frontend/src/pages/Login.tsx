@@ -19,7 +19,7 @@ export function Login() {
       formData.append('username', email); // O FastAPI chama email de 'username'
       formData.append('password', senha);
 
-      const response = await axios.post('https://sst-backend-xyz.onrender.com/token', formData);
+      const response = await axios.post('https://sst-backend-rij2.onrender.com/token', formData);
       
       // 1. Salva o token no navegador
       localStorage.setItem('token', response.data.access_token);

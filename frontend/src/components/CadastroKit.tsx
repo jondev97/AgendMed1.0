@@ -27,7 +27,7 @@ export function CadastroKit() {
     }
 
     try {
-      await axios.post('https://sst-backend-xyz.onrender.com/kits/', {
+      await axios.post('https://sst-backend-rij2.onrender.com/kits/', {
         nome_kit: nomeKit,
         lista_exames: listaExames
       });

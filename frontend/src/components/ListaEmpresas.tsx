@@ -14,7 +14,7 @@ export function ListaEmpresas() {
 
   useEffect(() => {
     // Busca as empresas no seu Backend
-    axios.get('https://sst-backend-xyz.onrender.com/empresas/')
+    axios.get('https://sst-backend-rij2.onrender.com/empresas/')
       .then(response => {
         setEmpresas(response.data);
       })

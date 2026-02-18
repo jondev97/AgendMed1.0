@@ -15,7 +15,7 @@ export function CadastroEmpresa() {
 
   // Carrega as consultorias disponíveis assim que o componente abre
   useEffect(() => {
-    axios.get('https://sst-backend-xyz.onrender.com/consultorias/')
+    axios.get('https://sst-backend-rij2.onrender.com/consultorias/')
       .then(res => setConsultorias(res.data))
       .catch(err => console.error("Erro ao carregar consultorias", err));
   }, []);
@@ -25,7 +25,7 @@ export function CadastroEmpresa() {
     setMensagem('Salvando...');
 
     try {
-      await axios.post('https://sst-backend-xyz.onrender.com/empresas/', {
+      await axios.post('https://sst-backend-rij2.onrender.com/empresas/', {
         razao_social: razaoSocial,
         cnpj: cnpj,
         consultoria_id: consultoriaId
