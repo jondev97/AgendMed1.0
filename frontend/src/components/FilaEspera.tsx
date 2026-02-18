@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Clock, User, Building2, CheckCircle, AlertCircle } from 'lucide-react';
+import { Clock, User, Building2, CheckCircle, FileText } from 'lucide-react'; // Adicionei FileText
 
 // Interface tipada com os objetos aninhados (Join do Backend)
 interface Atendimento {
@@ -42,21 +42,51 @@ export function FilaEspera() {
     }
   };
 
+  // --- NOVA FUNÇÃO: BAIXAR O PDF ---
+  const baixarUltimoASO = async () => {
+    try {
+      // Avisa que iniciou
+      setMensagem({ texto: "⏳ Buscando PDF...", tipo: 'sucesso' });
+
+      // Chama a rota do backend que pega o arquivo mais recente
+      const resposta = await axios.get(`https://sst-backend-rij2.onrender.com/download-aso/1`, {
+        responseType: 'blob' // Importante: diz que a resposta é um arquivo (binário)
+      });
+
+      // Cria o link de download invisível
+      const url = window.URL.createObjectURL(new Blob([resposta.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `ASO_Recente.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      
+      // Limpeza
+      link.remove();
+      setMensagem({ texto: "✅ Download iniciado!", tipo: 'sucesso' });
+      setTimeout(() => setMensagem(null), 3000);
+
+    } catch (erro) {
+      console.error(erro);
+      setMensagem({ texto: "❌ Erro ao baixar PDF. Finalize um atendimento antes!", tipo: 'erro' });
+    }
+  };
+
   // Função para o Médico finalizar o atendimento
   const finalizarAtendimento = async (id: string) => {
-    if(!confirm("Deseja realmente finalizar este atendimento?")) return;
+    if(!confirm("Deseja realmente finalizar e gerar o ASO?")) return;
 
     try {
       // Chama a rota PATCH que criamos no Python
       await axios.patch(`https://sst-backend-rij2.onrender.com/atendimentos/${id}/finalizar`);
       
-      setMensagem({ texto: "✅ Atendimento finalizado com sucesso!", tipo: 'sucesso' });
+      setMensagem({ texto: "✅ Atendimento finalizado! O ASO foi gerado.", tipo: 'sucesso' });
       
       // Atualiza a lista imediatamente para o paciente sumir
       buscarFila();
 
-      // Limpa a mensagem após 3 segundos
-      setTimeout(() => setMensagem(null), 3000);
+      // Limpa a mensagem após 5 segundos
+      setTimeout(() => setMensagem(null), 5000);
 
     } catch (err) {
       console.error(err);
@@ -74,11 +104,36 @@ export function FilaEspera() {
   return (
     <div style={{ marginTop: '30px', padding: '20px', backgroundColor: '#fff', border: '1px solid #dee2e6', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
       
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', flexWrap: 'wrap', gap: '10px' }}>
         <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Clock size={20} color="#007bff"/> Fila de Espera (Tempo Real)
         </h3>
-        <button onClick={buscarFila} style={{ cursor: 'pointer', padding: '5px 10px', fontSize: '0.8rem' }}>🔄 Atualizar</button>
+        
+        <div style={{ display: 'flex', gap: '10px' }}>
+            {/* BOTÃO NOVO DE DOWNLOAD */}
+            <button 
+                onClick={baixarUltimoASO} 
+                style={{ 
+                    cursor: 'pointer', 
+                    padding: '8px 15px', 
+                    fontSize: '0.9rem',
+                    backgroundColor: '#6610f2', // Cor roxa para destacar
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    fontWeight: 'bold'
+                }}
+            >
+                <FileText size={16} /> Baixar Último ASO
+            </button>
+
+            <button onClick={buscarFila} style={{ cursor: 'pointer', padding: '5px 10px', fontSize: '0.8rem', border: '1px solid #ccc', borderRadius: '4px', background: '#f8f9fa' }}>
+                🔄 Atualizar
+            </button>
+        </div>
       </div>
 
       {/* Mensagem de Feedback */}

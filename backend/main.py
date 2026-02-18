@@ -9,6 +9,7 @@ from aso_generator import gerar_aso_pdf
 from database import get_db, engine, SessionLocal
 import models
 import schemas
+import os
 
 #teste user
 from auth_utils import gerar_hash_senha, verificar_senha, criar_token_acesso
@@ -249,4 +250,26 @@ def force_reset(db: Session = Depends(get_db)):
         "hash_gerado": usuario.senha_hash[:20] + "..." # Mostra o começo do hash pra provar que gerou
     }
     
-    ##
+    
+@app.get("/download-aso/{id_atendimento}")
+def baixar_aso(id_atendimento: int):
+    # 1. Define onde os arquivos moram
+    pasta_asos = "asos_gerados"
+    
+    # 2. Tenta achar o arquivo (procure pelo ID ou nome mais recente)
+    # Como não sabemos o nome exato do arquivo com data, vamos pegar o último gerado
+    # (Num sistema real, salvaríamos o nome do arquivo no banco de dados)
+    
+    arquivos = [f for f in os.listdir(pasta_asos) if f.endswith(".pdf")]
+    if not arquivos:
+        return {"erro": "Nenhum arquivo encontrado"}
+    
+    # Pega o último arquivo modificado (truque rápido para o MVP)
+    ultimo_arquivo = max([os.path.join(pasta_asos, f) for f in arquivos], key=os.path.getctime)
+    
+    # 3. Entrega o arquivo para o navegador
+    return FileResponse(
+        path=ultimo_arquivo, 
+        filename=os.path.basename(ultimo_arquivo),
+        media_type='application/pdf'
+    )
