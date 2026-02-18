@@ -248,3 +248,5 @@ def force_reset(db: Session = Depends(get_db)):
         "mensagem": f"Senha resetada com sucesso para: {nova_senha}",
         "hash_gerado": usuario.senha_hash[:20] + "..." # Mostra o começo do hash pra provar que gerou
     }
+    
+    ##
