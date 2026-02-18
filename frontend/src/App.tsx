@@ -8,7 +8,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Login } from './pages/Login'; // Nova página
 
 // Componente "Segurança": Só deixa passar se tiver token
-function RotaProtegida({ children }: { children: JSX.Element }) {
+function RotaProtegida({ children }: { children: any }) {
   const token = localStorage.getItem('token');
   return token ? children : <Navigate to="/login" />;
 }
