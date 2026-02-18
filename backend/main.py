@@ -223,3 +223,28 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     # Se deu certo, gera o token
     token = criar_token_acesso({"sub": usuario.email, "cargo": usuario.cargo})
     return {"access_token": token, "token_type": "bearer"}
+
+
+
+# ... seus outros códigos ...
+
+# --- ROTA DE EMERGÊNCIA (Use e depois apague) ---
+@app.get("/force-reset")
+def force_reset(db: Session = Depends(get_db)):
+    # 1. Busca o usuário
+    usuario = db.query(models.Usuario).filter(models.Usuario.email == "admin@sst.com").first()
+    
+    if not usuario:
+        return {"status": "ERRO", "mensagem": "Usuário admin@sst.com não encontrado no banco!"}
+    
+    # 2. Força a nova senha
+    nova_senha = "admin123"
+    usuario.senha_hash = gerar_hash_senha(nova_senha)
+    db.add(usuario)
+    db.commit()
+    
+    return {
+        "status": "SUCESSO", 
+        "mensagem": f"Senha resetada com sucesso para: {nova_senha}",
+        "hash_gerado": usuario.senha_hash[:20] + "..." # Mostra o começo do hash pra provar que gerou
+    }
