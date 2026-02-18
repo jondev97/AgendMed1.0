@@ -13,7 +13,7 @@ export function CadastroPaciente() {
     setMensagem('Salvando...');
 
     try {
-      await axios.post('http://localhost:8000/pacientes/', {
+      await axios.post('https://sst-backend-xyz.onrender.com/pacientes/', {
         nome: nome,
         cpf: cpf,
         data_nascimento: dataNascimento, // O HTML date envia YYYY-MM-DD, que o Python aceita

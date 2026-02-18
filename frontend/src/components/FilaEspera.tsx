@@ -24,7 +24,7 @@ export function FilaEspera() {
   // Função para buscar a fila do Backend
   const buscarFila = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/atendimentos/');
+      const res = await axios.get('https://sst-backend-xyz.onrender.com/atendimentos/');
       
       // Filtra apenas quem está com status "Aberto"
       const abertos = res.data.filter((a: Atendimento) => a.status === 'Aberto');
@@ -48,7 +48,7 @@ export function FilaEspera() {
 
     try {
       // Chama a rota PATCH que criamos no Python
-      await axios.patch(`http://localhost:8000/atendimentos/${id}/finalizar`);
+      await axios.patch(`https://sst-backend-xyz.onrender.com/atendimentos/${id}/finalizar`);
       
       setMensagem({ texto: "✅ Atendimento finalizado com sucesso!", tipo: 'sucesso' });
       

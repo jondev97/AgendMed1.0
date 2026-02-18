@@ -13,7 +13,7 @@ export function Dashboard() {
 
   useEffect(() => {
     // Busca os dados atualizados ao carregar a página
-    axios.get('http://localhost:8000/dashboard/stats')
+    axios.get('https://sst-backend-xyz.onrender.com/dashboard/stats')
       .then(res => setStats(res.data))
       .catch(err => console.error("Erro ao carregar dashboard", err));
   }, []);

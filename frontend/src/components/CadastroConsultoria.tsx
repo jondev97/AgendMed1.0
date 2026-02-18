@@ -12,7 +12,7 @@ export function CadastroConsultoria() {
     setMensagem('Enviando...');
 
     try {
-      const response = await axios.post('http://localhost:8000/consultorias/', {
+      const response = await axios.post('https://sst-backend-xyz.onrender.com/consultorias/', {
         nome: nome,
         email_recebimento_kit: email, // Nome do campo conforme nosso backend
         token_api: null
